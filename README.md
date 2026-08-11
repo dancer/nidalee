@@ -1,7 +1,7 @@
 # 💘 NIDALEE
 
 <div align="center">
-  <img src="src-tauri/icons/icon.ico" alt="Nidalee Logo" width="150"/>
+  <img src="apps/desktop/src-tauri/icons/icon.ico" alt="Nidalee Logo" width="150"/>
   
   [![License](https://img.shields.io/badge/License-GPLv3-red.svg)](LICENSE)
   [![Made with Tauri](https://img.shields.io/badge/Made%20with-Tauri-red.svg)](https://tauri.app)
@@ -12,6 +12,23 @@
   <img src="preview.png" alt="Nidalee Preview" width="800"/>
   <p align="center"><i>A modern account manager for League of Legends and Valorant</i></p>
 </div>
+
+## 🩷 Repository Layout
+
+This repository is a monorepo containing both the desktop app and the website:
+
+| Path | Project | Stack |
+| --- | --- | --- |
+| [`apps/desktop`](apps/desktop) | The Nidalee desktop app | Tauri, Rust, React, Vite |
+| [`apps/web`](apps/web) | The [nidal.ee](https://nidal.ee) website | Next.js, Tailwind |
+
+```bash
+npm install        # installs both workspaces
+
+npm run dev        # desktop app (Vite dev server)
+npm run tauri dev  # desktop app (full Tauri shell)
+npm run dev:web    # website
+```
 
 ## 🩷 About
 

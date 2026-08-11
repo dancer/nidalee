@@ -1,0 +1,16 @@
+{
+  "name": "nidalee-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace nidalee-desktop",
+    "dev:web": "npm run dev --workspace nidalee-web",
+    "build": "npm run build --workspace nidalee-desktop",
+    "build:web": "npm run build --workspace nidalee-web",
+    "start:web": "npm run start --workspace nidalee-web",
+    "lint:web": "npm run lint --workspace nidalee-web",
+    "tauri": "npm run tauri --workspace nidalee-desktop"
+  }
+}
