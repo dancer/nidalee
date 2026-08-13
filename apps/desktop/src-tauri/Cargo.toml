@@ -1,6 +1,6 @@
 [package]
 name = "nidalee"
-version = "0.1.1"
+version = "0.1.4"
 description = "Account manager and auto login for League of Legends and VALORANT"
 authors = ["dancer"]
 license = "GPL-3.0-only"
