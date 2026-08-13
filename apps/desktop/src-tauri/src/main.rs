@@ -10,6 +10,7 @@ use enigo::{Enigo, Key, KeyboardControllable, MouseButton, MouseControllable};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::env;
+use std::ffi::CStr;
 use std::fs;
 use std::fs::create_dir_all;
 use std::fs::read_dir;
@@ -180,7 +181,7 @@ async fn get_settings(state: tauri::State<'_, AppState>) -> Result<Settings, Str
 // Riot's own top level window classes. The generic Chromium class this used to
 // also search matches every Electron app on the machine, so an unrelated window
 // with "Update" in its title could stall a launch for three minutes.
-const RIOT_WINDOW_CLASSES: [&str; 3] = ["RCLIENT\0", "RiotClientMainWindow\0", "VALORANT  \0"];
+const RIOT_WINDOW_CLASSES: [&CStr; 3] = [c"RCLIENT", c"RiotClientMainWindow", c"VALORANT  "];
 
 fn window_title(window: HWND) -> String {
     let mut buffer = [0u8; 256];
@@ -192,7 +193,7 @@ fn window_title(window: HWND) -> String {
 
 fn is_updating() -> bool {
     RIOT_WINDOW_CLASSES.iter().any(|class| {
-        let window = unsafe { FindWindowA(PCSTR::from_raw(class.as_ptr()), PCSTR::null()) };
+        let window = unsafe { FindWindowA(PCSTR::from_raw(class.as_ptr().cast()), PCSTR::null()) };
         if window == HWND(0) {
             return false;
         }
@@ -202,28 +203,35 @@ fn is_updating() -> bool {
     })
 }
 
+// The login window is a Chromium view on current clients and a native RCLIENT
+// window on older ones, so both are worth asking for.
+fn find_riot_client_window() -> HWND {
+    unsafe {
+        let chromium = FindWindowA(
+            PCSTR::from_raw(c"Chrome_WidgetWin_1".as_ptr().cast()),
+            PCSTR::from_raw(c"Riot Client".as_ptr().cast()),
+        );
+        if chromium != HWND(0) {
+            return chromium;
+        }
+
+        FindWindowA(
+            PCSTR::from_raw(c"RCLIENT".as_ptr().cast()),
+            PCSTR::from_raw(c"Riot Client".as_ptr().cast()),
+        )
+    }
+}
+
 fn wait_for_riot_client() -> Result<(), String> {
     println!("Waiting for Riot Client window...");
     let max_attempts = 30;
     let mut attempts = 0;
 
     while attempts < max_attempts {
-        unsafe {
-            let window = FindWindowA(
-                PCSTR::from_raw("Chrome_WidgetWin_1\0".as_ptr()),
-                PCSTR::from_raw("Riot Client\0".as_ptr()),
-            );
-
-            let window2 = FindWindowA(
-                PCSTR::from_raw("RCLIENT\0".as_ptr()),
-                PCSTR::from_raw("Riot Client\0".as_ptr()),
-            );
-
-            if window != HWND(0) || window2 != HWND(0) {
-                thread::sleep(Duration::from_secs(2));
-                println!("Riot Client window found!");
-                return Ok(());
-            }
+        if find_riot_client_window() != HWND(0) {
+            thread::sleep(Duration::from_secs(2));
+            println!("Riot Client window found!");
+            return Ok(());
         }
 
         thread::sleep(Duration::from_secs(1));
@@ -314,19 +322,9 @@ async fn launch_game(
 
     thread::sleep(Duration::from_millis(500));
 
+    let target_window = find_riot_client_window();
+
     unsafe {
-        let window = FindWindowA(
-            PCSTR::from_raw("Chrome_WidgetWin_1\0".as_ptr()),
-            PCSTR::from_raw("Riot Client\0".as_ptr()),
-        );
-
-        let window2 = FindWindowA(
-            PCSTR::from_raw("RCLIENT\0".as_ptr()),
-            PCSTR::from_raw("Riot Client\0".as_ptr()),
-        );
-
-        let target_window = if window != HWND(0) { window } else { window2 };
-
         if target_window != HWND(0) {
             let mut rect = RECT::default();
             GetWindowRect(target_window, &mut rect);
@@ -779,7 +777,7 @@ fn main() {
                 IsIconic, ShowWindow, SW_RESTORE, SW_SHOW,
             };
 
-            let window = FindWindowA(PCSTR::null(), PCSTR::from_raw("Nidalee\0".as_ptr()));
+            let window = FindWindowA(PCSTR::null(), PCSTR::from_raw(c"Nidalee".as_ptr().cast()));
             if window != HWND(0) {
                 if IsIconic(window).as_bool() {
                     ShowWindow(window, SW_RESTORE);
@@ -799,7 +797,7 @@ fn main() {
 
     let _settings_path = app_data_dir.join("settings.json");
 
-    let riot_client_path = find_riot_client_path().unwrap_or_else(|| String::new());
+    let riot_client_path = find_riot_client_path().unwrap_or_default();
     println!("Found Riot Client path: {}", riot_client_path);
 
     let settings = if let Ok(content) = fs::read_to_string(&_settings_path) {
