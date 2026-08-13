@@ -9,7 +9,7 @@ const righteous = Righteous({
   display: 'swap',
 })
 
-export default function Terms() {
+export default function TermsOfService() {
   return (
     <main className="min-h-screen bg-[#f5f5f5] flex flex-col select-none">
       {/* Top bar with decorative lines */}
@@ -23,7 +23,7 @@ export default function Terms() {
         <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>TERMS</div>
         <div className="flex items-center gap-6">
           <div className="w-12 h-[1px] bg-neutral-300"></div>
-          <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>2024</div>
+          <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>{new Date().getFullYear()}</div>
         </div>
       </div>
 
@@ -34,63 +34,70 @@ export default function Terms() {
             <h2 className={`text-2xl text-[#ff4f4f] mb-4 ${righteous.className}`}>Terms of Service</h2>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                By using Nidalee, you agree to these terms of service. Please read them carefully.
+                Nidalee is free, open source software released under the GPLv3 licence. By downloading or using it you
+                agree to the terms below.
               </p>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>RSO Authentication & Opt-In Requirements</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>No Warranty</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                To use Nidalee's features, you must authenticate through Riot Sign On (RSO) and explicitly opt-in to data collection. This requirement ensures:
+                Nidalee is provided as is, without warranty of any kind. It automates keyboard and mouse input against
+                the Riot Client, which is inherently fragile: a change to that client can stop logins from working. You
+                use it at your own risk and the author is not liable for any loss arising from its use.
               </p>
-              <ul className={`list-disc pl-5 space-y-2 text-sm text-neutral-600 ${righteous.className}`}>
-                <li>Secure verification of your Riot Games account</li>
-                <li>Protection of your gameplay data</li>
-                <li>Compliance with Riot Games' data policies</li>
-              </ul>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Data Usage & Display</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Relationship With Riot Games</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                We will only display gameplay statistics and information for users who have explicitly opted in through RSO authentication. Your data will not be visible to other users unless you have granted permission.
+                Nidalee is an independent project and is not affiliated with, endorsed by, sponsored by or approved by
+                Riot Games. League of Legends and VALORANT are trademarks of Riot Games, Inc.
+              </p>
+              <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
+                Nidalee automates entering your own credentials into Riot&apos;s official client. It does not modify any
+                game, read game memory, or provide any in-game advantage. Even so, third party automation is not
+                something Riot has approved, and you remain responsible for complying with Riot&apos;s Terms of Service.
+                If you are not comfortable with that, do not use this app.
               </p>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Account Management</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Your Responsibilities</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
                 You are responsible for:
               </p>
               <ul className={`list-disc pl-5 space-y-2 text-sm text-neutral-600 ${righteous.className}`}>
-                <li>Maintaining the security of your account credentials</li>
-                <li>Managing your RSO authentication status</li>
-                <li>Updating your opt-in preferences</li>
-                <li>Any activity that occurs under your account</li>
+                <li>Only adding accounts that belong to you</li>
+                <li>Keeping your Windows user account secure, since it protects the stored credentials</li>
+                <li>Any activity performed on accounts you launch through Nidalee</li>
+                <li>Complying with the terms of the games you play</li>
               </ul>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Compliance with Riot Games</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Your Credentials</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                Nidalee operates in compliance with Riot Games' developer policies and terms of service. We maintain necessary security measures and data handling practices as required by Riot Games.
+                Credentials are stored on your machine only, encrypted at rest from version 0.1.4 onward. They are never
+                transmitted to us or to anyone else. See the <Link href="/privacy" className="text-[#ff4f4f] hover:underline">privacy policy</Link> for detail.
               </p>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Changes to Terms</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Changes To These Terms</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                We reserve the right to modify these terms at any time. Continued use of Nidalee after changes constitutes acceptance of the new terms.
+                These terms may change as the app evolves. Continued use after a change means you accept the updated
+                terms. Questions can go to josh@afterima.ge.
               </p>
             </div>
           </section>
@@ -101,8 +108,8 @@ export default function Terms() {
       <footer className="w-full py-6">
         <div className="w-full h-[1px] bg-neutral-300 mb-4"></div>
         <div className="flex justify-center gap-8">
-          <Link 
-            href="/privacy" 
+          <Link
+            href="/privacy"
             className={`text-[10px] md:text-sm tracking-wider text-neutral-600 hover:text-neutral-900 transition-colors ${righteous.className}`}
           >
             PRIVACY POLICY

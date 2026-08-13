@@ -23,7 +23,7 @@ export default function Privacy() {
         <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>PRIVACY</div>
         <div className="flex items-center gap-6">
           <div className="w-12 h-[1px] bg-neutral-300"></div>
-          <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>2024</div>
+          <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>{new Date().getFullYear()}</div>
         </div>
       </div>
 
@@ -34,57 +34,79 @@ export default function Privacy() {
             <h2 className={`text-2xl text-[#ff4f4f] mb-4 ${righteous.className}`}>Privacy Policy</h2>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                Welcome to Nidalee's Privacy Policy. This document outlines how we collect, use, and protect your information.
+                Nidalee is a local-first Windows application. There is no Nidalee account, no sign-up and no server that
+                holds your data. Everything you add stays on your own PC.
               </p>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Data Collection & RSO Integration</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>What The App Stores</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                Nidalee uses Riot Games' RSO (Riot Sign On) for player verification. This ensures secure access to your League of Legends and Valorant accounts.
+                Nidalee saves the accounts you add to a file in your Windows user folder, at
+                %APPDATA%\Nidalee. That file contains the display name, username, password, optional email,
+                category and last login time for each account, along with your settings.
               </p>
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                We only collect and display gameplay statistics and data for players who have explicitly opted in to our service through RSO authentication. If you haven't signed up for Nidalee, your information will not be accessible to other users.
+                From version 0.1.4 onward, usernames and passwords are encrypted at rest using the Windows Data
+                Protection API, which ties the encryption key to your Windows user account. Versions before 0.1.4 stored
+                them as readable text, so if you are on an older build, please update.
               </p>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Information We Collect</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>What The App Sends</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                Through RSO authentication, we may collect:
+                Your credentials are never transmitted anywhere. Nidalee types them into the official Riot Client running
+                on your machine, exactly as you would type them yourself.
               </p>
-              <ul className={`list-disc pl-5 space-y-2 text-sm text-neutral-600 ${righteous.className}`}>
-                <li>Your Riot Games username</li>
-                <li>Account region</li>
-                <li>Game-specific data (ranks, match history, etc.)</li>
-                <li>Authentication tokens for secure API access</li>
-              </ul>
-            </div>
-          </section>
-
-          <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Data Protection</h3>
-            <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                Your account credentials and personal information are encrypted and securely stored. We never share your data with third parties without your explicit consent.
+                The only network request the app makes is an update check to nidal.ee. That request necessarily includes
+                your current app version, operating system, CPU architecture and IP address. Nothing else is sent.
+              </p>
+              <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
+                Nidalee contained Firebase Analytics up to and including version 0.1.3, which reported app opens,
+                installs and game launches. It was removed in 0.1.4 and the app now ships with no analytics or telemetry
+                of any kind.
               </p>
             </div>
           </section>
 
           <section>
-            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Opt-Out Process</h3>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>This Website</h3>
             <div className="space-y-4">
               <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
-                You can revoke Nidalee's access to your account data at any time by:
+                nidal.ee uses Vercel Analytics to count page views. It is cookieless and does not build a profile of you.
+                The site is hosted by Vercel, whose servers process request data such as your IP address in order to
+                serve the page.
               </p>
-              <ul className={`list-disc pl-5 space-y-2 text-sm text-neutral-600 ${righteous.className}`}>
-                <li>Disconnecting your account through our settings</li>
-                <li>Revoking access through your Riot Games account settings</li>
-              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Riot Games</h3>
+            <div className="space-y-4">
+              <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
+                Nidalee is an independent project. It is not affiliated with, endorsed by, or approved by Riot Games, and
+                it does not use Riot Sign On or the Riot API. No data is shared with Riot beyond the ordinary login you
+                perform against their own client.
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <h3 className={`text-lg text-[#ff4f4f] mb-3 ${righteous.className}`}>Deleting Your Data</h3>
+            <div className="space-y-4">
+              <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
+                Because nothing leaves your PC, there is nothing for us to delete on your behalf. Remove individual
+                accounts in the app, or delete the %APPDATA%\Nidalee folder to erase everything Nidalee has stored.
+              </p>
+              <p className={`text-sm text-neutral-600 leading-relaxed ${righteous.className}`}>
+                Questions about any of this can go to josh@afterima.ge.
+              </p>
             </div>
           </section>
         </div>
@@ -94,8 +116,8 @@ export default function Privacy() {
       <footer className="w-full py-6">
         <div className="w-full h-[1px] bg-neutral-300 mb-4"></div>
         <div className="flex justify-center gap-8">
-          <Link 
-            href="/tos" 
+          <Link
+            href="/tos"
             className={`text-[10px] md:text-sm tracking-wider text-neutral-600 hover:text-neutral-900 transition-colors ${righteous.className}`}
           >
             TERMS OF SERVICE
