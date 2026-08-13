@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { Righteous } from 'next/font/google'
-import { Copy, Check, Download } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { Copy, Check } from 'lucide-react'
+import { useState } from 'react'
 import Image from 'next/image'
+import { APP_VERSION, DOWNLOAD_URL } from './version'
 
 const righteous = Righteous({
   weight: '400',
@@ -14,7 +15,6 @@ const righteous = Righteous({
 
 export default function Home() {
   const [copied, setCopied] = useState(false)
-  const [downloadText, setDownloadText] = useState('DOWNLOAD HERE')
 
   const handleCopyEmail = async (e: React.MouseEvent) => {
     e.preventDefault()
@@ -40,17 +40,12 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    setDownloadText('DOWNLOAD_HERE')
-  }, [])
-
-
   return (
     <main className="min-h-screen bg-[#f5f5f5] flex flex-col select-none">
       {/* Top bar with decorative lines */}
       <div className="w-full px-6 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>v0.1.3</div>
+          <div className={`text-xs tracking-wider text-neutral-500 ${righteous.className}`}>v{APP_VERSION}</div>
           <div className="w-12 h-[1px] bg-neutral-300"></div>
         </div>
         <div className="flex items-center">
@@ -82,7 +77,7 @@ export default function Home() {
 
         <div className="flex justify-center w-full px-4">
           <Link
-            href="https://github.com/dancer/Nidalee/releases/download/v0.1.3/Nidalee_0.1.3.msi"
+            href={DOWNLOAD_URL}
             className={`bg-[#ff4f4f] hover:bg-[#ff3f3f] transition-colors px-8 py-3 flex items-center justify-center gap-2 shadow-md rounded ${righteous.className}`}
           >
             <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
