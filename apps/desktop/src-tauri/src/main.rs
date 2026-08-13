@@ -177,6 +177,31 @@ async fn get_settings(state: tauri::State<'_, AppState>) -> Result<Settings, Str
     Ok(settings.clone())
 }
 
+// Riot's own top level window classes. The generic Chromium class this used to
+// also search matches every Electron app on the machine, so an unrelated window
+// with "Update" in its title could stall a launch for three minutes.
+const RIOT_WINDOW_CLASSES: [&str; 3] = ["RCLIENT\0", "RiotClientMainWindow\0", "VALORANT  \0"];
+
+fn window_title(window: HWND) -> String {
+    let mut buffer = [0u8; 256];
+    // GetWindowTextA returns the length it wrote, so trailing bytes from any
+    // previous read are never included.
+    let length = unsafe { GetWindowTextA(window, &mut buffer) }.max(0) as usize;
+    String::from_utf8_lossy(&buffer[..length]).into_owned()
+}
+
+fn is_updating() -> bool {
+    RIOT_WINDOW_CLASSES.iter().any(|class| {
+        let window = unsafe { FindWindowA(PCSTR::from_raw(class.as_ptr()), PCSTR::null()) };
+        if window == HWND(0) {
+            return false;
+        }
+
+        let title = window_title(window);
+        title.contains("Update") || title.contains("Installing") || title.contains("Updating")
+    })
+}
+
 fn wait_for_riot_client() -> Result<(), String> {
     println!("Waiting for Riot Client window...");
     let max_attempts = 30;
@@ -261,54 +286,6 @@ async fn launch_game(
 
     wait_for_riot_client()?;
     
-    fn is_updating() -> bool {
-        unsafe {
-            let riot_update_window = FindWindowA(
-                PCSTR::from_raw("Chrome_WidgetWin_1\0".as_ptr()),
-                PCSTR::null(),
-            );
-            
-            let valorant_update_window = FindWindowA(
-                PCSTR::from_raw("VALORANT  \0".as_ptr()),
-                PCSTR::null(),
-            );
-
-            let league_update_window = FindWindowA(
-                PCSTR::from_raw("RiotClientMainWindow\0".as_ptr()),
-                PCSTR::null(),
-            );
-
-            let mut is_updating = false;
-            let mut text = [0u8; 256];
-
-            if riot_update_window != HWND(0) {
-                GetWindowTextA(riot_update_window, &mut text);
-                let window_text = String::from_utf8_lossy(&text).to_string();
-                is_updating |= window_text.contains("Update") || 
-                              window_text.contains("Installing") ||
-                              window_text.contains("Updating");
-            }
-
-            if valorant_update_window != HWND(0) {
-                GetWindowTextA(valorant_update_window, &mut text);
-                let window_text = String::from_utf8_lossy(&text).to_string();
-                is_updating |= window_text.contains("Update") || 
-                              window_text.contains("Installing") ||
-                              window_text.contains("Updating");
-            }
-
-            if league_update_window != HWND(0) {
-                GetWindowTextA(league_update_window, &mut text);
-                let window_text = String::from_utf8_lossy(&text).to_string();
-                is_updating |= window_text.contains("Update") || 
-                              window_text.contains("Installing") ||
-                              window_text.contains("Updating");
-            }
-
-            is_updating
-        }
-    }
-
     let mut update_check_attempts = 0;
     while update_check_attempts < 180 {
         if is_updating() {
