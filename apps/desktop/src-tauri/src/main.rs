@@ -983,13 +983,6 @@ fn main() {
                             let window_handle = window.clone();
                             
                             std::thread::spawn(move || {
-                                #[cfg(target_os = "windows")]
-                                let _ = Command::new("cmd")
-                                    .creation_flags(0x08000000)
-                                    .stdout(Stdio::null())
-                                    .stderr(Stdio::null())
-                                    .spawn();
-
                                 std::thread::sleep(std::time::Duration::from_secs(2));
                                 
                                 let state = window_handle.state::<AppState>();
