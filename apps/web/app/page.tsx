@@ -18,7 +18,7 @@ export default function Home() {
 
   const handleCopyEmail = async (e: React.MouseEvent) => {
     e.preventDefault()
-    const email = 'support@nidal.ee'
+    const email = 'josh@afterima.ge'
 
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -114,14 +114,6 @@ export default function Home() {
               rel="noopener noreferrer"
             >
               GITHUB
-            </Link>
-            <Link
-              href="https://discord.gg/website"
-              className={`text-[10px] md:text-sm tracking-wider text-[#ff4f4f] hover:text-[#ff8f8f] transition-colors ${righteous.className}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              DISCORD
             </Link>
             <Link
               href="https://ko-fi.com/nida"
