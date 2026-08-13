@@ -46,10 +46,6 @@ A significant update focusing on improved game launching reliability!
 2. Launch from desktop or start menu
 3. Add your accounts and start playing!
 
-## 💖 Support
-
-If you like this project, consider supporting it on [Ko-fi](https://ko-fi.com/nida)
-
 ## 💯 Issues
 
 Found a bug? Please report it in the [Issues](https://github.com/dancer/nidalee/issues) section.
@@ -105,10 +101,6 @@ A major update focusing on automatic account switching and improved user experie
 2. Launch from desktop or start menu
 3. Add your accounts and start playing!
 
-## 💖 Support
-
-If you like this project, consider supporting it on [Ko-fi](https://ko-fi.com/nida)
-
 ## 💯 Issues
 
 Found a bug? Please report it in the [Issues](https://github.com/dancer/nidalee/issues) section.
@@ -163,10 +155,6 @@ A significant update focusing on reliability and performance improvements!
 1. Download and run Nidalee.msi
 2. Launch from desktop or start menu
 3. Add your accounts and start playing!
-
-## 💖 Support
-
-If you like this project, consider supporting it on [Ko-fi](https://ko-fi.com/nida)
 
 ## 💯 Issues
 
