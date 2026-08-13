@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Account } from '../types';
 import { FormInputEvent, FormSelectEvent } from '../types/events';
-import { logAccountAdd } from '../firebase';
 import { FaUser, FaKey, FaEnvelope, FaGamepad, FaEye, FaEyeSlash, FaPlus } from 'react-icons/fa';
 
 export const AddAccount: React.FC = () => {
@@ -55,7 +54,6 @@ export const AddAccount: React.FC = () => {
       };
 
       await invoke('save_account', { account });
-      logAccountAdd();
 
       setFormData({
         name: '',

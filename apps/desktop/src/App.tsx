@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Tabs } from './components/Tabs';
 import { TitleBar } from './components/TitleBar';
 import { MainSection } from './components/MainSection';
@@ -7,27 +7,9 @@ import { Statistics } from './components/Statistics';
 import { Settings } from './components/Settings';
 import { FaGithub } from 'react-icons/fa';
 import { open } from '@tauri-apps/api/shell';
-import { invoke } from '@tauri-apps/api/tauri';
-import { logAppOpen, logInstallation } from './firebase';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('main');
-
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const isFirstRun = await invoke<boolean>('check_first_run');
-        if (isFirstRun) {
-          logInstallation();
-        }
-      } catch (error) {
-        console.error('Failed to check first run:', error);
-      }
-      logAppOpen();
-    };
-
-    init();
-  }, []);
 
   const openGitHub = () => {
     open('https://github.com/dancer/nidalee');

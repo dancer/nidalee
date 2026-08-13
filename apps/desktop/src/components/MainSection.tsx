@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Account } from '../types'
 import { FormSelectEvent } from '../types/events';
-import { logGameLaunch } from '../firebase';
 import { FaGamepad, FaUser, FaFolder, FaPlay, FaClock, FaExclamationTriangle } from 'react-icons/fa';
 
 interface GameStatus {
@@ -95,7 +94,6 @@ export const MainSection: React.FC = () => {
         selectedGame
       });
 
-      logGameLaunch(selectedGame);
       await checkGameStatus();
     } catch (error) {
       console.error('Failed to launch new game:', error);

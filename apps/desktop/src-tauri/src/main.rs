@@ -642,19 +642,6 @@ async fn get_categories() -> Result<Vec<String>, String> {
     }
 }
 
-#[tauri::command]
-async fn check_first_run() -> Result<bool, String> {
-    let app_data_dir = get_app_data_dir()?;
-    let install_marker = app_data_dir.join(".installed");
-
-    if !install_marker.exists() {
-        fs::write(&install_marker, "").map_err(|e| e.to_string())?;
-        Ok(true)
-    } else {
-        Ok(false)
-    }
-}
-
 fn get_clean_exe_path() -> Result<String, String> {
     let exe_path = env::current_exe().map_err(|e| e.to_string())?;
     let canonical_path = exe_path.canonicalize().map_err(|e| e.to_string())?;
@@ -916,7 +903,6 @@ fn main() {
             get_auto_start_status,
             save_categories,
             get_categories,
-            check_first_run,
             minimize_window,
             check_game_status,
             force_close_game
