@@ -218,11 +218,13 @@ export const MainSection: React.FC = () => {
               onChange={(e: FormSelectEvent) => setSelectedAccount(e.target.value)}
             >
               <option value="" className="bg-bl-gray text-white">Choose account...</option>
-              {accounts.map((account) => (
-                <option key={account.id} value={account.id} className="bg-bl-gray text-white">
-                  {account.name} ({account.username})
-                </option>
-              ))}
+              {accounts
+                .filter((account) => !selectedCategory || account.category === selectedCategory)
+                .map((account) => (
+                  <option key={account.id} value={account.id} className="bg-bl-gray text-white">
+                    {account.name} ({account.username})
+                  </option>
+                ))}
             </select>
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
               <svg className="h-4 w-4 text-bl-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
