@@ -41,6 +41,8 @@ struct Account {
     name: String,
     username: String,
     password: String,
+    #[serde(default)]
+    email: Option<String>,
     category: String,
     last_login: Option<String>,
     game_type: String,
