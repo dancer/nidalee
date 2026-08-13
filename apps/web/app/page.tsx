@@ -111,14 +111,6 @@ export default function Home() {
               GITHUB
             </Link>
             <Link
-              href="https://ko-fi.com/nida"
-              className={`text-[10px] md:text-sm tracking-wider text-[#ff4f4f] hover:text-[#ff8f8f] transition-colors ${righteous.className}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              KO-FI
-            </Link>
-            <Link
               href="/privacy"
               className={`text-[10px] md:text-sm tracking-wider text-neutral-600 hover:text-neutral-900 transition-colors ${righteous.className}`}
             >

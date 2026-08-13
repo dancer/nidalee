@@ -122,10 +122,8 @@ This repository is a monorepo:
 
 ## 💖 Support
 
-If Nidalee saves you time, a star is appreciated, and there is a [Ko-fi](https://ko-fi.com/nida) if
-you would like to buy me a coffee.
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nida)
+If Nidalee saves you time, a star is appreciated. Bugs and ideas are welcome in
+[issues](https://github.com/dancer/nidalee/issues).
 
 ## 💘 License
 
