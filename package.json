@@ -11,6 +11,8 @@
     "build:web": "npm run build --workspace nidalee-web",
     "start:web": "npm run start --workspace nidalee-web",
     "lint:web": "npm run lint --workspace nidalee-web",
-    "tauri": "npm run tauri --workspace nidalee-desktop"
+    "tauri": "npm run tauri --workspace nidalee-desktop",
+    "set-version": "node scripts/set-version.mjs",
+    "publish-release": "node scripts/publish-release.mjs"
   }
 }
