@@ -10,10 +10,21 @@
     "version": "0.1.3"
   },
   "tauri": {
+    "updater": {
+      "active": true,
+      "dialog": true,
+      "endpoints": [
+        "https://nidal.ee/api/update/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEY5OTZENjExNDkyRjM2MEEKUldRS05pOUpFZGFXK2Q0SUhrOUlVdm5pVzR1OU1ncFh2WjhMeFJmUitQaEVMdzZqNTgyTjlQdHMK",
+      "windows": {
+        "installMode": "passive"
+      }
+    },
     "allowlist": {
       "shell": {
         "all": false,
-        "execute": true,
+        "execute": false,
         "sidecar": false,
         "open": true,
         "scope": []
@@ -36,7 +47,7 @@
     },
     "bundle": {
       "active": true,
-      "targets": "all",
+      "targets": ["msi", "updater"],
       "identifier": "com.uoucat.nidalee",
       "icon": [
         "icons/48.png",
