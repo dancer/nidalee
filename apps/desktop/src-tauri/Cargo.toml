@@ -1,10 +1,10 @@
 [package]
 name = "nidalee"
 version = "0.1.1"
-description = "Nidalee by uoucat"
-authors = ["uoucat"]
-license = ""
-repository = ""
+description = "Account manager and auto login for League of Legends and VALORANT"
+authors = ["dancer"]
+license = "GPL-3.0-only"
+repository = "https://github.com/dancer/nidalee"
 edition = "2021"
 
 [build-dependencies]
@@ -15,19 +15,17 @@ tauri = { version = "1.5", features = [ "window-all", "shell-execute", "shell-op
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 chrono = "0.4"
-aes-gcm = "0.10.1"
 base64 = "0.21.0"
-rand = "0.8"
 enigo = "0.1.2"
-winapi = { version = "0.3", features = ["winbase"] }
 winreg = "0.50"
 windows = { version = "0.48", features = [
     "Win32_Foundation",
     "Win32_UI_WindowsAndMessaging",
     "Win32_System_Threading",
-    "Win32_Security"
+    "Win32_System_Memory",
+    "Win32_Security",
+    "Win32_Security_Cryptography",
 ] }
-clipboard-win = "4.5"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

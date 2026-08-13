@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+mod crypto;
+
 use chrono::Utc;
 use enigo::{Enigo, Key, KeyboardControllable, MouseButton, MouseControllable};
 use serde::{Deserialize, Serialize};
@@ -74,16 +76,51 @@ struct GameStatus {
     valorant_running: bool,
 }
 
+type Accounts = HashMap<String, Account>;
+
+// Every read and write of accounts.json goes through these two functions, so
+// credentials exist as plaintext only in memory and never reach the disk.
+fn accounts_path() -> Result<PathBuf, String> {
+    Ok(get_app_data_dir()?.join("accounts.json"))
+}
+
+// Also reports whether anything was still stored in the clear, which is how a
+// file written by 0.1.3 or earlier gets upgraded on first launch.
+fn read_accounts() -> Result<(Accounts, bool), String> {
+    let Ok(content) = fs::read_to_string(accounts_path()?) else {
+        return Ok((HashMap::new(), false));
+    };
+
+    let mut accounts: Accounts = serde_json::from_str(&content).map_err(|e| e.to_string())?;
+    let mut had_plaintext = false;
+
+    for account in accounts.values_mut() {
+        if !crypto::is_protected(&account.username) || !crypto::is_protected(&account.password) {
+            had_plaintext = true;
+        }
+        account.username = crypto::unprotect(&account.username)?;
+        account.password = crypto::unprotect(&account.password)?;
+    }
+
+    Ok((accounts, had_plaintext))
+}
+
+fn write_accounts(accounts: &Accounts) -> Result<(), String> {
+    let mut encrypted = accounts.clone();
+    for account in encrypted.values_mut() {
+        account.username = crypto::protect(&account.username)?;
+        account.password = crypto::protect(&account.password)?;
+    }
+
+    let json = serde_json::to_string_pretty(&encrypted).map_err(|e| e.to_string())?;
+    fs::write(accounts_path()?, json).map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 async fn save_account(account: Account, state: tauri::State<'_, AppState>) -> Result<(), String> {
     let mut accounts = state.accounts.lock().unwrap();
     accounts.insert(account.id.clone(), account);
-
-    let accounts_path = get_app_data_dir()?.join("accounts.json");
-    let accounts_json = serde_json::to_string_pretty(&*accounts).map_err(|e| e.to_string())?;
-    fs::write(accounts_path, accounts_json).map_err(|e| e.to_string())?;
-
-    Ok(())
+    write_accounts(&accounts)
 }
 
 #[tauri::command]
@@ -96,12 +133,7 @@ async fn get_accounts(state: tauri::State<'_, AppState>) -> Result<Vec<Account>,
 async fn delete_account(id: String, state: tauri::State<'_, AppState>) -> Result<(), String> {
     let mut accounts = state.accounts.lock().unwrap();
     accounts.remove(&id);
-
-    let accounts_path = get_app_data_dir()?.join("accounts.json");
-    let accounts_json = serde_json::to_string(&*accounts).map_err(|e| e.to_string())?;
-    fs::write(accounts_path, accounts_json).map_err(|e| e.to_string())?;
-
-    Ok(())
+    write_accounts(&accounts)
 }
 
 #[tauri::command]
@@ -402,9 +434,7 @@ async fn launch_game(
                 let mut accounts = state.accounts.lock().unwrap();
                 if let Some(acc) = accounts.get_mut(&account.id) {
                     acc.last_login = Some(Utc::now().to_rfc3339());
-                    let accounts_path = get_app_data_dir()?.join("accounts.json");
-                    let accounts_json = serde_json::to_string(&*accounts).map_err(|e| e.to_string())?;
-                    fs::write(accounts_path, accounts_json).map_err(|e| e.to_string())?;
+                    write_accounts(&accounts)?;
                 }
                 
                 return Ok(());
@@ -803,8 +833,6 @@ fn main() {
     println!("Using app data directory: {}", app_data_dir.display());
 
     let _settings_path = app_data_dir.join("settings.json");
-    let _accounts_path = app_data_dir.join("accounts.json");
-    let _categories_path = app_data_dir.join("categories.json");
 
     let riot_client_path = find_riot_client_path().unwrap_or_else(|| String::new());
     println!("Found Riot Client path: {}", riot_client_path);
@@ -845,11 +873,17 @@ fn main() {
         settings
     };
 
-    let accounts = if let Ok(content) = fs::read_to_string(&_accounts_path) {
-        serde_json::from_str(&content).unwrap_or_else(|_| HashMap::new())
-    } else {
-        HashMap::new()
-    };
+    let (accounts, had_plaintext) = read_accounts().unwrap_or_else(|e| {
+        println!("Could not read accounts: {}", e);
+        (HashMap::new(), false)
+    });
+
+    if had_plaintext {
+        match write_accounts(&accounts) {
+            Ok(()) => println!("Encrypted stored credentials with DPAPI"),
+            Err(e) => println!("Could not encrypt stored credentials: {}", e),
+        }
+    }
 
     let app_state = AppState {
         accounts: Mutex::new(accounts),
