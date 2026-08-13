@@ -771,36 +771,22 @@ fn main() {
         let existing_mutex =
             OpenMutexW(MUTEX_ALL_ACCESS, false, PCWSTR(mutex_name_wide.as_ptr())).ok();
 
+        // Launching a second time should surface the window that is already
+        // running. It used to hide or minimise it instead, so double clicking the
+        // shortcut made a visible app disappear.
         if let Some(_mutex) = existing_mutex {
+            use windows::Win32::UI::WindowsAndMessaging::{
+                IsIconic, ShowWindow, SW_RESTORE, SW_SHOW,
+            };
+
             let window = FindWindowA(PCSTR::null(), PCSTR::from_raw("Nidalee\0".as_ptr()));
-
             if window != HWND(0) {
-                use windows::Win32::UI::WindowsAndMessaging::{
-                    IsIconic, ShowWindow, SW_HIDE, SW_MINIMIZE, SW_RESTORE, SW_SHOW,
-                };
-
                 if IsIconic(window).as_bool() {
                     ShowWindow(window, SW_RESTORE);
-                    ShowWindow(window, SW_SHOW);
-                    BringWindowToTop(window);
-                    SetForegroundWindow(window);
-                } else {
-                    let settings_path = get_app_data_dir().unwrap().join("settings.json");
-                    if let Ok(content) = fs::read_to_string(&settings_path) {
-                        if let Ok(settings) = serde_json::from_str::<Settings>(&content) {
-                            if settings.minimize_to_tray {
-                                ShowWindow(window, SW_HIDE);
-                            } else {
-                                ShowWindow(window, SW_MINIMIZE);
-                            }
-                        } else {
-                            ShowWindow(window, SW_MINIMIZE);
-                        }
-                    } else {
-                        ShowWindow(window, SW_MINIMIZE);
-                    }
                 }
-                return;
+                ShowWindow(window, SW_SHOW);
+                BringWindowToTop(window);
+                SetForegroundWindow(window);
             }
             return;
         }
